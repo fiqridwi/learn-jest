@@ -1,14 +1,52 @@
 import { calculateComplexity, toUpperCaseWithCb } from "../../app/doubles/OtherUtils";
 
 describe("OtherUtils test suite", () => {
-	it("ToUpperCase - calls callback with invalid arg", () => {
-		const actual = toUpperCaseWithCb("", () => {});
-		expect(actual).toBeUndefined();
+	describe("Tracking callbacks with jest", () => {
+		let callBackMock = jest.fn();
+
+		afterEach(() => {
+			callBackMock.mockClear();
+			// OR
+			// jest.clearAllMocks();
+		});
+
+		it("Jestmock - calls callback with invalid arg", () => {
+			const actual = toUpperCaseWithCb("", callBackMock);
+			expect(actual).toBeUndefined();
+			expect(callBackMock).toBeCalledWith("Invalid argument");
+			expect(callBackMock).toBeCalledTimes(1);
+		});
+		it("Jestmock - calls callback with valid arg", () => {
+			const actual = toUpperCaseWithCb("test", callBackMock);
+			expect(actual).toBe("TEST");
+			expect(callBackMock).toBeCalledWith("call function with test");
+			expect(callBackMock).toBeCalledTimes(1);
+		});
 	});
 
-	it("ToUpperCase - calls callback with valid arg", () => {
-		const actual = toUpperCaseWithCb("test", () => {});
-		expect(actual).toBe("TEST");
+	describe("Tracking callbacks", () => {
+		let cbArgs = [];
+		let timesCalled = 0;
+		function callBackMock(arg: string) {
+			cbArgs.push(arg);
+			timesCalled++;
+		}
+		afterEach(() => {
+			cbArgs = [];
+			timesCalled = 0;
+		});
+		it("ToUpperCase - calls callback with invalid arg", () => {
+			const actual = toUpperCaseWithCb("", callBackMock);
+			expect(actual).toBeUndefined();
+			expect(cbArgs).toContain("Invalid argument");
+			expect(timesCalled).toBe(1);
+		});
+		it("ToUpperCase - calls callback with valid arg", () => {
+			const actual = toUpperCaseWithCb("test", callBackMock);
+			expect(actual).toBe("TEST");
+			expect(cbArgs).toContain("call function with test");
+			expect(timesCalled).toBe(1);
+		});
 	});
 
 	it("Calculates complexity", () => {
