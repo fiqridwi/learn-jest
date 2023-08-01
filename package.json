@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "start": "ts-node src/app/server_app/Launcher.ts"
   },
   "author": "",
   "license": "ISC",
